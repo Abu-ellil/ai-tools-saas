@@ -1,5 +1,6 @@
 "use client";
 
+import { useUser } from "@clerk/nextjs";
 import {
   Card,
   CardContent,
@@ -21,10 +22,7 @@ import {
 } from "lucide-react";
 
 export default function DashboardPage() {
-  // استخدام بيانات مستخدم وهمية للعرض
-  const user = {
-    firstName: "محمد",
-  };
+  const { user } = useUser();
 
   return (
     <div className="container py-10">

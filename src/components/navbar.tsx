@@ -9,12 +9,18 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Menu, User } from "lucide-react";
+import { Menu } from "lucide-react";
 import { useState } from "react";
+import { useAppSelector } from "@/redux/hooks";
+import { UserButton } from "@clerk/nextjs";
 
 export function Navbar() {
-  // For demo purposes, we'll simulate a signed-in state
-  const isSignedIn = false;
+  // استخدام Redux للتحقق من حالة تسجيل الدخول
+  const isSignedIn = useAppSelector((state) => state.user.isSignedIn);
+  const user = useAppSelector((state) => state.user.user);
+  const subscription = useAppSelector(
+    (state) => state.subscription.subscription
+  );
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
@@ -29,6 +35,9 @@ export function Navbar() {
           <Link href="/pricing" className="hover:text-primary transition">
             الأسعار
           </Link>
+          <Link href="/chat" className="hover:text-primary transition">
+            المحادثة الذكية
+          </Link>
           {isSignedIn ? (
             <>
               <Link href="/dashboard" className="hover:text-primary transition">
@@ -40,18 +49,14 @@ export function Navbar() {
             </>
           ) : (
             <>
-              <Link href="/sign-in" className="hover:text-primary transition">
+              <Link href="/login" className="hover:text-primary transition">
                 تسجيل الدخول
               </Link>
             </>
           )}
           <div className="flex items-center gap-4">
             <ModeToggle />
-            {isSignedIn && (
-              <Button variant="ghost" size="icon">
-                <User className="h-5 w-5" />
-              </Button>
-            )}
+            {isSignedIn && <UserButton />}
             {!isSignedIn && (
               <Button asChild>
                 <Link href="/sign-up">إنشاء حساب</Link>
@@ -63,11 +68,7 @@ export function Navbar() {
         {/* Mobile Navigation */}
         <div className="md:hidden flex items-center gap-4">
           <ModeToggle />
-          {isSignedIn && (
-            <Button variant="ghost" size="icon">
-              <User className="h-5 w-5" />
-            </Button>
-          )}
+          {isSignedIn && <UserButton />}
           <DropdownMenu open={isMenuOpen} onOpenChange={setIsMenuOpen}>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="icon">
@@ -78,6 +79,11 @@ export function Navbar() {
               <DropdownMenuItem asChild>
                 <Link href="/pricing" className="w-full cursor-pointer">
                   الأسعار
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/chat" className="w-full cursor-pointer">
+                  المحادثة الذكية
                 </Link>
               </DropdownMenuItem>
               {isSignedIn ? (
@@ -96,7 +102,7 @@ export function Navbar() {
               ) : (
                 <>
                   <DropdownMenuItem asChild>
-                    <Link href="/sign-in" className="w-full cursor-pointer">
+                    <Link href="/login" className="w-full cursor-pointer">
                       تسجيل الدخول
                     </Link>
                   </DropdownMenuItem>

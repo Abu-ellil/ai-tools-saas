@@ -1,18 +1,19 @@
-import { Webhook } from 'svix';
-import { headers } from 'next/headers';
-import { WebhookEvent } from '@clerk/nextjs/server';
-import { db } from '@/lib/db';
+import { Webhook } from "svix";
+import { headers } from "next/headers";
+import { WebhookEvent } from "@clerk/nextjs/server";
+import { db } from "@/lib/mongodb-db";
+import { Plan, SubscriptionStatus } from "@/models/Subscription";
 
 export async function POST(req: Request) {
   // Get the headers
   const headerPayload = headers();
-  const svix_id = headerPayload.get('svix-id');
-  const svix_timestamp = headerPayload.get('svix-timestamp');
-  const svix_signature = headerPayload.get('svix-signature');
+  const svix_id = headerPayload.get("svix-id");
+  const svix_timestamp = headerPayload.get("svix-timestamp");
+  const svix_signature = headerPayload.get("svix-signature");
 
   // If there are no headers, error out
   if (!svix_id || !svix_timestamp || !svix_signature) {
-    return new Response('Error: Missing svix headers', {
+    return new Response("Error: Missing svix headers", {
       status: 400,
     });
   }
@@ -22,20 +23,20 @@ export async function POST(req: Request) {
   const body = JSON.stringify(payload);
 
   // Create a new Svix instance with your webhook secret
-  const wh = new Webhook(process.env.CLERK_WEBHOOK_SECRET || '');
+  const wh = new Webhook(process.env.CLERK_WEBHOOK_SECRET || "");
 
   let evt: WebhookEvent;
 
   // Verify the payload with the headers
   try {
     evt = wh.verify(body, {
-      'svix-id': svix_id,
-      'svix-timestamp': svix_timestamp,
-      'svix-signature': svix_signature,
+      "svix-id": svix_id,
+      "svix-timestamp": svix_timestamp,
+      "svix-signature": svix_signature,
     }) as WebhookEvent;
   } catch (err) {
-    console.error('Error verifying webhook:', err);
-    return new Response('Error: Invalid webhook signature', {
+    console.error("Error verifying webhook:", err);
+    return new Response("Error: Invalid webhook signature", {
       status: 400,
     });
   }
@@ -43,36 +44,65 @@ export async function POST(req: Request) {
   // Handle the webhook
   const eventType = evt.type;
 
-  if (eventType === 'user.created') {
+  if (eventType === "user.created") {
     const { id, email_addresses } = evt.data;
     const email = email_addresses[0].email_address;
 
-    // Create a new user in the database
-    await db.user.create({
-      data: {
+    try {
+      console.log("Creating user in MongoDB:", { clerkId: id, email });
+
+      // Create a new user in the database
+      const newUser = new db.user({
         clerkId: id,
         email: email,
-        subscriptions: {
-          create: {
-            plan: 'FREE',
-            credits: 10, // Free tier credits
-            status: 'ACTIVE',
-          },
-        },
-      },
-    });
+      });
+
+      const savedUser = await newUser.save();
+      console.log("User created in MongoDB:", savedUser);
+
+      // Create subscription for the user
+      const newSubscription = new db.subscription({
+        userId: savedUser._id,
+        plan: Plan.FREE,
+        credits: 10, // Free tier credits
+        status: SubscriptionStatus.ACTIVE,
+      });
+
+      const savedSubscription = await newSubscription.save();
+      console.log("Subscription created in MongoDB:", savedSubscription);
+    } catch (error) {
+      console.error("Error creating user in MongoDB:", error);
+    }
   }
 
-  if (eventType === 'user.deleted') {
+  if (eventType === "user.deleted") {
     const { id } = evt.data;
 
-    // Delete the user from the database
-    await db.user.delete({
-      where: {
-        clerkId: id,
-      },
-    });
+    try {
+      console.log("Deleting user from MongoDB:", { clerkId: id });
+
+      // Find user by clerkId
+      const user = await db.user.findOne({ clerkId: id });
+
+      if (user) {
+        // Delete all subscriptions for this user
+        await db.subscription.deleteMany({ userId: user._id });
+        console.log("Deleted subscriptions for user:", user._id);
+
+        // Delete all usage records for this user
+        await db.usageRecord.deleteMany({ userId: user._id });
+        console.log("Deleted usage records for user:", user._id);
+
+        // Delete the user
+        await db.user.deleteOne({ clerkId: id });
+        console.log("Deleted user from MongoDB:", { clerkId: id });
+      } else {
+        console.log("User not found in MongoDB:", { clerkId: id });
+      }
+    } catch (error) {
+      console.error("Error deleting user from MongoDB:", error);
+    }
   }
 
-  return new Response('Webhook received', { status: 200 });
+  return new Response("Webhook received", { status: 200 });
 }

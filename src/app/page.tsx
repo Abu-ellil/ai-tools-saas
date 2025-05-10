@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { ImageIcon, MessageSquare, Music, Video } from "lucide-react";
 
 export default function Home() {
   return (
@@ -25,7 +25,7 @@ export default function Home() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild>
-              <Link href="/sign-up">ابدأ الآن مجاناً</Link>
+              <Link href="/chat">جرب المحادثة الذكية مجاناً</Link>
             </Button>
             <Button size="lg" variant="outline" asChild>
               <Link href="/pricing">عرض الأسعار</Link>
@@ -40,105 +40,59 @@ export default function Home() {
           <h2 className="text-3xl font-bold text-center mb-12">
             أدواتنا المميزة
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <Card>
-              <CardHeader>
-                <CardTitle>المحادثة الذكية</CardTitle>
-                <CardDescription>
-                  محادثات ذكية مع نماذج ChatGPT المتطورة
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="h-40 bg-muted rounded-md flex items-center justify-center">
-                  <Image
-                    src="/placeholder.svg"
-                    alt="محادثة ذكية"
-                    width={100}
-                    height={100}
-                    className="opacity-70"
-                  />
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button variant="outline" className="w-full" asChild>
-                  <Link href="/tools/chat">جرب الآن</Link>
-                </Button>
-              </CardFooter>
-            </Card>
+          {(() => {
+            const tools = [
+              {
+                title: "المحادثة الذكية",
+                description: "محادثات ذكية مع نماذج ChatGPT المتطورة",
+                icon: MessageSquare,
+                href: "/chat",
+              },
+              {
+                title: "توليد الصور",
+                description: "إنشاء صور إبداعية من وصف نصي",
+                icon: ImageIcon,
+                href: "/tools/image",
+              },
+              {
+                title: "توليد الفيديو",
+                description: "إنشاء مقاطع فيديو قصيرة من وصف نصي",
+                icon: Video,
+                href: "/tools/video",
+              },
+              {
+                title: "توليد الصوت",
+                description: "تحويل النص إلى صوت طبيعي بلهجات متعددة",
+                icon: Music,
+                href: "/tools/audio",
+              },
+            ];
 
-            <Card>
-              <CardHeader>
-                <CardTitle>توليد الصور</CardTitle>
-                <CardDescription>إنشاء صور إبداعية من وصف نصي</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="h-40 bg-muted rounded-md flex items-center justify-center">
-                  <Image
-                    src="/placeholder.svg"
-                    alt="توليد الصور"
-                    width={100}
-                    height={100}
-                    className="opacity-70"
-                  />
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button variant="outline" className="w-full" asChild>
-                  <Link href="/tools/image">جرب الآن</Link>
-                </Button>
-              </CardFooter>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>توليد الفيديو</CardTitle>
-                <CardDescription>
-                  إنشاء مقاطع فيديو قصيرة من وصف نصي
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="h-40 bg-muted rounded-md flex items-center justify-center">
-                  <Image
-                    src="/placeholder.svg"
-                    alt="توليد الفيديو"
-                    width={100}
-                    height={100}
-                    className="opacity-70"
-                  />
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button variant="outline" className="w-full" asChild>
-                  <Link href="/tools/video">جرب الآن</Link>
-                </Button>
-              </CardFooter>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>توليد الصوت</CardTitle>
-                <CardDescription>
-                  تحويل النص إلى صوت طبيعي بلهجات متعددة
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="h-40 bg-muted rounded-md flex items-center justify-center">
-                  <Image
-                    src="/placeholder.svg"
-                    alt="توليد الصوت"
-                    width={100}
-                    height={100}
-                    className="opacity-70"
-                  />
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button variant="outline" className="w-full" asChild>
-                  <Link href="/tools/audio">جرب الآن</Link>
-                </Button>
-              </CardFooter>
-            </Card>
-          </div>
+            return (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                {tools.map((tool, index) => (
+                  <Card key={index}>
+                    <CardHeader>
+                      <CardTitle>{tool.title}</CardTitle>
+                      <CardDescription className="h-6">
+                        {tool.description}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="h-40 bg-muted rounded-md flex items-center justify-center">
+                        <tool.icon className="h-16 w-16 text-primary opacity-70" />
+                      </div>
+                    </CardContent>
+                    <CardFooter>
+                      <Button variant="outline" className="w-full" asChild>
+                        <Link href={tool.href}>جرب الآن</Link>
+                      </Button>
+                    </CardFooter>
+                  </Card>
+                ))}
+              </div>
+            );
+          })()}
         </div>
       </section>
 
@@ -164,7 +118,7 @@ export default function Home() {
               </CardContent>
               <CardFooter>
                 <Button className="w-full" asChild>
-                  <Link href="/sign-up">اشترك الآن</Link>
+                  <Link href="/login">اشترك الآن</Link>
                 </Button>
               </CardFooter>
             </Card>

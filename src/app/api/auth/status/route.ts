@@ -1,0 +1,69 @@
+import { NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
+import { db } from "@/lib/mongodb-db";
+
+// الحصول على حالة تسجيل الدخول والمعلومات الأساسية للمستخدم
+export async function GET() {
+  try {
+    // التحقق من تسجيل الدخول
+    const authResult = await auth();
+    const userId = authResult.userId;
+
+    // إذا لم يكن المستخدم مسجل الدخول
+    if (!userId) {
+      return NextResponse.json({
+        isSignedIn: false,
+        user: null,
+        subscription: null,
+      });
+    }
+
+    try {
+      // التأكد من الاتصال بقاعدة البيانات
+      if (!db.isConnected()) {
+        await db.connect();
+      }
+
+      // الحصول على المستخدم من قاعدة البيانات
+      const dbUser = await db.user.findOne({ clerkId: userId });
+
+      if (!dbUser) {
+        // إذا لم يتم العثور على المستخدم في قاعدة البيانات، نقوم بإنشاء مستخدم جديد
+        return NextResponse.json({
+          isSignedIn: true,
+          user: {
+            id: userId,
+            clerkId: userId,
+            name: "مستخدم جديد",
+            email: "",
+            credits: 0,
+          },
+          subscription: null,
+          needsRegistration: true,
+        });
+      }
+
+      // الحصول على اشتراك المستخدم
+      const subscription = await db.subscription.findOne({
+        userId: dbUser._id,
+      });
+
+      return NextResponse.json({
+        isSignedIn: true,
+        user: dbUser,
+        subscription,
+        needsRegistration: false,
+      });
+    } catch (dbError) {
+      console.error("Error with database operations:", dbError);
+
+      // حتى في بيئة التطوير، نعيد خطأ إذا كان هناك مشكلة في قاعدة البيانات
+      // لا نستخدم بيانات وهمية
+
+      throw dbError;
+    }
+  } catch (error) {
+    console.error("Error in auth status API:", error);
+    return new NextResponse("خطأ في الخادم", { status: 500 });
+  }
+}

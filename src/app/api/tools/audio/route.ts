@@ -1,20 +1,20 @@
-import { auth, currentUser } from '@clerk/nextjs';
-import { NextResponse } from 'next/server';
-import { db } from '@/lib/db';
+import { auth, currentUser } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
+import { db } from "@/lib/db";
 
 export async function POST(req: Request) {
   try {
-    const { userId } = auth();
+    const { userId } = await auth();
     const user = await currentUser();
 
     if (!userId || !user) {
-      return new NextResponse('Unauthorized', { status: 401 });
+      return new NextResponse("Unauthorized", { status: 401 });
     }
 
     const { text, voice, speed } = await req.json();
 
     if (!text) {
-      return new NextResponse('Text is required', { status: 400 });
+      return new NextResponse("Text is required", { status: 400 });
     }
 
     // Get user from database
@@ -28,14 +28,14 @@ export async function POST(req: Request) {
     });
 
     if (!dbUser) {
-      return new NextResponse('User not found', { status: 404 });
+      return new NextResponse("User not found", { status: 404 });
     }
 
     // Check if user has active subscription with credits
     const subscription = dbUser.subscriptions[0];
 
     if (!subscription || subscription.credits < 2) {
-      return new NextResponse('Insufficient credits', { status: 403 });
+      return new NextResponse("Insufficient credits", { status: 403 });
     }
 
     // In a real app, you would call the AI service API here
@@ -53,13 +53,13 @@ export async function POST(req: Request) {
     // const audioUrl = response.audio_url;
 
     // For demo purposes, we'll return a placeholder
-    const audioUrl = 'https://example.com/audio.mp3';
+    const audioUrl = "https://example.com/audio.mp3";
 
     // Record usage
     await db.usageRecord.create({
       data: {
         userId: dbUser.id,
-        toolType: 'AUDIO',
+        toolType: "AUDIO",
         content: text.substring(0, 100), // Store first 100 chars of text
         credits: 2, // Each audio costs 2 credits
       },
@@ -79,7 +79,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ audioUrl });
   } catch (error) {
-    console.error('[AUDIO_ERROR]', error);
-    return new NextResponse('Internal error', { status: 500 });
+    console.error("[AUDIO_ERROR]", error);
+    return new NextResponse("Internal error", { status: 500 });
   }
 }

@@ -4,6 +4,8 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
+import { AuthProvider } from "@/components/auth-provider";
+import { ReduxProvider } from "@/redux/provider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -27,21 +29,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ar" dir="rtl">
+    <html lang="ar" dir="rtl" className="" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
+        suppressHydrationWarning
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <Toaster />
-        </ThemeProvider>
+        <ReduxProvider>
+          <AuthProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <Navbar />
+              <main className="flex-1">{children}</main>
+              <Footer />
+              <Toaster />
+            </ThemeProvider>
+          </AuthProvider>
+        </ReduxProvider>
       </body>
     </html>
   );

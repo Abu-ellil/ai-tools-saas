@@ -2,7 +2,14 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Download, Loader2, Video } from "lucide-react";
@@ -33,7 +40,8 @@ export default function VideoPage() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">توليد الفيديو</h1>
           <p className="text-muted-foreground">
-            إنشاء مقاطع فيديو قصيرة من وصف نصي باستخدام أحدث تقنيات الذكاء الاصطناعي
+            إنشاء مقاطع فيديو قصيرة من وصف نصي باستخدام أحدث تقنيات الذكاء
+            الاصطناعي
           </p>
         </div>
 
@@ -58,7 +66,11 @@ export default function VideoPage() {
                     />
                   </div>
                   <div>
-                    <Button type="submit" disabled={isGenerating || !prompt.trim()} className="w-full">
+                    <Button
+                      type="submit"
+                      disabled={isGenerating || !prompt.trim()}
+                      className="w-full"
+                    >
                       {isGenerating ? (
                         <>
                           <Loader2 className="ml-2 h-4 w-4 animate-spin" />
@@ -82,13 +94,19 @@ export default function VideoPage() {
                         {isGenerating ? (
                           <div className="flex flex-col items-center">
                             <Loader2 className="h-10 w-10 animate-spin text-muted-foreground" />
-                            <p className="mt-2 text-muted-foreground">جاري توليد الفيديو...</p>
-                            <p className="text-xs text-muted-foreground mt-1">قد يستغرق هذا بضع دقائق</p>
+                            <p className="mt-2 text-muted-foreground">
+                              جاري توليد الفيديو...
+                            </p>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              قد يستغرق هذا بضع دقائق
+                            </p>
                           </div>
                         ) : generatedVideo ? (
                           <div className="relative w-full h-full flex flex-col items-center justify-center">
                             <Video className="h-16 w-16 text-primary mb-4" />
-                            <p className="text-center mb-4">تم توليد الفيديو بنجاح!</p>
+                            <p className="text-center mb-4">
+                              تم توليد الفيديو بنجاح!
+                            </p>
                             <Button variant="secondary">
                               <Download className="ml-2 h-4 w-4" />
                               تنزيل الفيديو
@@ -97,7 +115,10 @@ export default function VideoPage() {
                         ) : (
                           <div className="flex flex-col items-center text-muted-foreground">
                             <Video className="h-10 w-10 mb-2" />
-                            <p>اكتب وصفاً وانقر على "توليد الفيديو" لإنشاء فيديو جديد</p>
+                            <p>
+                              اكتب وصفاً وانقر على "توليد الفيديو" لإنشاء فيديو
+                              جديد
+                            </p>
                           </div>
                         )}
                       </div>
@@ -108,13 +129,17 @@ export default function VideoPage() {
                           <div className="h-32 bg-muted rounded-md mb-2 flex items-center justify-center">
                             <Video className="h-6 w-6 text-muted-foreground" />
                           </div>
-                          <p className="text-xs truncate">شروق الشمس على شاطئ البحر</p>
+                          <p className="text-xs truncate">
+                            شروق الشمس على شاطئ البحر
+                          </p>
                         </div>
                         <div className="border rounded-lg p-2 bg-muted/30">
                           <div className="h-32 bg-muted rounded-md mb-2 flex items-center justify-center">
                             <Video className="h-6 w-6 text-muted-foreground" />
                           </div>
-                          <p className="text-xs truncate">سيارة تسير في طريق جبلي</p>
+                          <p className="text-xs truncate">
+                            سيارة تسير في طريق جبلي
+                          </p>
                         </div>
                       </div>
                     </TabsContent>
@@ -143,13 +168,31 @@ export default function VideoPage() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
-                  <Button variant="outline" className="w-full justify-start" onClick={() => setPrompt("شروق الشمس على شاطئ البحر مع أمواج هادئة")}>
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start text-wrap h-auto py-2 whitespace-normal text-right"
+                    onClick={() =>
+                      setPrompt("شروق الشمس على شاطئ البحر مع أمواج هادئة")
+                    }
+                  >
                     شروق الشمس على الشاطئ
                   </Button>
-                  <Button variant="outline" className="w-full justify-start" onClick={() => setPrompt("سيارة تسير في طريق جبلي مع مناظر طبيعية خلابة")}>
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start text-wrap h-auto py-2 whitespace-normal text-right"
+                    onClick={() =>
+                      setPrompt("سيارة تسير في طريق جبلي مع مناظر طبيعية خلابة")
+                    }
+                  >
                     سيارة في طريق جبلي
                   </Button>
-                  <Button variant="outline" className="w-full justify-start" onClick={() => setPrompt("مدينة مزدحمة في الليل مع أضواء النيون")}>
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start text-wrap h-auto py-2 whitespace-normal text-right"
+                    onClick={() =>
+                      setPrompt("مدينة مزدحمة في الليل مع أضواء النيون")
+                    }
+                  >
                     مدينة ليلية مضاءة
                   </Button>
                 </div>

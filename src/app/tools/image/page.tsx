@@ -3,7 +3,14 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Download, Image as ImageIcon, Loader2 } from "lucide-react";
@@ -34,7 +41,8 @@ export default function ImagePage() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">توليد الصور</h1>
           <p className="text-muted-foreground">
-            إنشاء صور إبداعية من وصف نصي باستخدام تقنيات الذكاء الاصطناعي المتطورة
+            إنشاء صور إبداعية من وصف نصي باستخدام تقنيات الذكاء الاصطناعي
+            المتطورة
           </p>
         </div>
 
@@ -59,7 +67,11 @@ export default function ImagePage() {
                     />
                   </div>
                   <div>
-                    <Button type="submit" disabled={isGenerating || !prompt.trim()} className="w-full">
+                    <Button
+                      type="submit"
+                      disabled={isGenerating || !prompt.trim()}
+                      className="w-full"
+                    >
                       {isGenerating ? (
                         <>
                           <Loader2 className="ml-2 h-4 w-4 animate-spin" />
@@ -83,7 +95,9 @@ export default function ImagePage() {
                         {isGenerating ? (
                           <div className="flex flex-col items-center">
                             <Loader2 className="h-10 w-10 animate-spin text-muted-foreground" />
-                            <p className="mt-2 text-muted-foreground">جاري توليد الصورة...</p>
+                            <p className="mt-2 text-muted-foreground">
+                              جاري توليد الصورة...
+                            </p>
                           </div>
                         ) : generatedImage ? (
                           <div className="relative w-full h-full">
@@ -105,7 +119,10 @@ export default function ImagePage() {
                         ) : (
                           <div className="flex flex-col items-center text-muted-foreground">
                             <ImageIcon className="h-10 w-10 mb-2" />
-                            <p>اكتب وصفاً وانقر على "توليد الصورة" لإنشاء صورة جديدة</p>
+                            <p>
+                              اكتب وصفاً وانقر على "توليد الصورة" لإنشاء صورة
+                              جديدة
+                            </p>
                           </div>
                         )}
                       </div>
@@ -116,13 +133,17 @@ export default function ImagePage() {
                           <div className="h-32 bg-muted rounded-md mb-2 flex items-center justify-center">
                             <ImageIcon className="h-6 w-6 text-muted-foreground" />
                           </div>
-                          <p className="text-xs truncate">منظر طبيعي لغروب الشمس</p>
+                          <p className="text-xs truncate">
+                            منظر طبيعي لغروب الشمس
+                          </p>
                         </div>
                         <div className="border rounded-lg p-2 bg-muted/30">
                           <div className="h-32 bg-muted rounded-md mb-2 flex items-center justify-center">
                             <ImageIcon className="h-6 w-6 text-muted-foreground" />
                           </div>
-                          <p className="text-xs truncate">قطة تلعب في الحديقة</p>
+                          <p className="text-xs truncate">
+                            قطة تلعب في الحديقة
+                          </p>
                         </div>
                       </div>
                     </TabsContent>
@@ -151,13 +172,31 @@ export default function ImagePage() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
-                  <Button variant="outline" className="w-full justify-start" onClick={() => setPrompt("منظر طبيعي لغروب الشمس على شاطئ البحر")}>
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start text-wrap h-auto py-2 whitespace-normal text-right"
+                    onClick={() =>
+                      setPrompt("منظر طبيعي لغروب الشمس على شاطئ البحر")
+                    }
+                  >
                     منظر طبيعي لغروب الشمس
                   </Button>
-                  <Button variant="outline" className="w-full justify-start" onClick={() => setPrompt("قطة صغيرة تلعب في حديقة مليئة بالزهور")}>
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start text-wrap h-auto py-2 whitespace-normal text-right"
+                    onClick={() =>
+                      setPrompt("قطة صغيرة تلعب في حديقة مليئة بالزهور")
+                    }
+                  >
                     قطة تلعب في الحديقة
                   </Button>
-                  <Button variant="outline" className="w-full justify-start" onClick={() => setPrompt("مدينة مستقبلية بأضواء نيون وناطحات سحاب")}>
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start text-wrap h-auto py-2 whitespace-normal text-right"
+                    onClick={() =>
+                      setPrompt("مدينة مستقبلية بأضواء نيون وناطحات سحاب")
+                    }
+                  >
                     مدينة مستقبلية
                   </Button>
                 </div>

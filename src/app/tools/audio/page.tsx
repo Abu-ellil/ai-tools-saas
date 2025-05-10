@@ -2,7 +2,14 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Download, Loader2, Music, Play, Square } from "lucide-react";
@@ -39,7 +46,8 @@ export default function AudioPage() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">توليد الصوت</h1>
           <p className="text-muted-foreground">
-            تحويل النص إلى صوت طبيعي بلهجات متعددة باستخدام تقنيات الذكاء الاصطناعي
+            تحويل النص إلى صوت طبيعي بلهجات متعددة باستخدام تقنيات الذكاء
+            الاصطناعي
           </p>
         </div>
 
@@ -65,7 +73,9 @@ export default function AudioPage() {
                   </div>
                   <div className="flex flex-col sm:flex-row gap-4">
                     <div className="w-full sm:w-1/2">
-                      <label className="text-sm font-medium mb-2 block">اختر الصوت</label>
+                      <label className="text-sm font-medium mb-2 block">
+                        اختر الصوت
+                      </label>
                       <select className="w-full p-2 rounded-md border">
                         <option value="male1">ذكر - فصحى</option>
                         <option value="female1">أنثى - فصحى</option>
@@ -76,16 +86,24 @@ export default function AudioPage() {
                       </select>
                     </div>
                     <div className="w-full sm:w-1/2">
-                      <label className="text-sm font-medium mb-2 block">سرعة النطق</label>
+                      <label className="text-sm font-medium mb-2 block">
+                        سرعة النطق
+                      </label>
                       <select className="w-full p-2 rounded-md border">
                         <option value="0.75">بطيء</option>
-                        <option value="1.0" selected>متوسط</option>
+                        <option value="1.0" selected>
+                          متوسط
+                        </option>
                         <option value="1.25">سريع</option>
                       </select>
                     </div>
                   </div>
                   <div>
-                    <Button type="submit" disabled={isGenerating || !text.trim()} className="w-full">
+                    <Button
+                      type="submit"
+                      disabled={isGenerating || !text.trim()}
+                      className="w-full"
+                    >
                       {isGenerating ? (
                         <>
                           <Loader2 className="ml-2 h-4 w-4 animate-spin" />
@@ -109,18 +127,34 @@ export default function AudioPage() {
                         {isGenerating ? (
                           <div className="flex flex-col items-center">
                             <Loader2 className="h-10 w-10 animate-spin text-muted-foreground" />
-                            <p className="mt-2 text-muted-foreground">جاري توليد الصوت...</p>
+                            <p className="mt-2 text-muted-foreground">
+                              جاري توليد الصوت...
+                            </p>
                           </div>
                         ) : generatedAudio ? (
                           <div className="flex flex-col items-center justify-center w-full">
                             <div className="flex items-center justify-center gap-4 mb-4">
-                              <Button size="icon" variant="outline" onClick={togglePlayback}>
-                                {isPlaying ? <Square className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+                              <Button
+                                size="icon"
+                                variant="outline"
+                                onClick={togglePlayback}
+                              >
+                                {isPlaying ? (
+                                  <Square className="h-4 w-4" />
+                                ) : (
+                                  <Play className="h-4 w-4" />
+                                )}
                               </Button>
                               <div className="w-48 h-2 bg-muted rounded-full overflow-hidden">
-                                <div className={`h-full bg-primary ${isPlaying ? "w-1/3" : "w-0"}`}></div>
+                                <div
+                                  className={`h-full bg-primary ${
+                                    isPlaying ? "w-1/3" : "w-0"
+                                  }`}
+                                ></div>
                               </div>
-                              <span className="text-xs text-muted-foreground">00:15</span>
+                              <span className="text-xs text-muted-foreground">
+                                00:15
+                              </span>
                             </div>
                             <Button variant="secondary">
                               <Download className="ml-2 h-4 w-4" />
@@ -130,7 +164,9 @@ export default function AudioPage() {
                         ) : (
                           <div className="flex flex-col items-center text-muted-foreground">
                             <Music className="h-10 w-10 mb-2" />
-                            <p>اكتب نصاً وانقر على "توليد الصوت" لإنشاء ملف صوتي</p>
+                            <p>
+                              اكتب نصاً وانقر على "توليد الصوت" لإنشاء ملف صوتي
+                            </p>
                           </div>
                         )}
                       </div>
@@ -139,7 +175,9 @@ export default function AudioPage() {
                       <div className="space-y-4">
                         <div className="border rounded-lg p-4 bg-muted/30">
                           <div className="flex justify-between items-center mb-2">
-                            <p className="font-medium">مرحباً بكم في منصة أدوات الذكاء</p>
+                            <p className="font-medium">
+                              مرحباً بكم في منصة أدوات الذكاء
+                            </p>
                             <div className="flex items-center gap-2">
                               <Button size="icon" variant="ghost">
                                 <Play className="h-4 w-4" />
@@ -149,11 +187,15 @@ export default function AudioPage() {
                               </Button>
                             </div>
                           </div>
-                          <p className="text-xs text-muted-foreground">ذكر - فصحى • 00:08</p>
+                          <p className="text-xs text-muted-foreground">
+                            ذكر - فصحى • 00:08
+                          </p>
                         </div>
                         <div className="border rounded-lg p-4 bg-muted/30">
                           <div className="flex justify-between items-center mb-2">
-                            <p className="font-medium">الذكاء الاصطناعي يغير مستقبل العالم</p>
+                            <p className="font-medium">
+                              الذكاء الاصطناعي يغير مستقبل العالم
+                            </p>
                             <div className="flex items-center gap-2">
                               <Button size="icon" variant="ghost">
                                 <Play className="h-4 w-4" />
@@ -163,7 +205,9 @@ export default function AudioPage() {
                               </Button>
                             </div>
                           </div>
-                          <p className="text-xs text-muted-foreground">أنثى - فصحى • 00:12</p>
+                          <p className="text-xs text-muted-foreground">
+                            أنثى - فصحى • 00:12
+                          </p>
                         </div>
                       </div>
                     </TabsContent>
@@ -192,13 +236,37 @@ export default function AudioPage() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
-                  <Button variant="outline" className="w-full justify-start" onClick={() => setText("مرحباً بكم في منصة أدوات الذكاء، المنصة العربية الأولى لأدوات الذكاء الاصطناعي.")}>
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start text-wrap h-auto py-2 whitespace-normal text-right"
+                    onClick={() =>
+                      setText(
+                        "مرحباً بكم في منصة أدوات الذكاء، المنصة العربية الأولى لأدوات الذكاء الاصطناعي."
+                      )
+                    }
+                  >
                     رسالة ترحيبية
                   </Button>
-                  <Button variant="outline" className="w-full justify-start" onClick={() => setText("الذكاء الاصطناعي هو قدرة الآلات على محاكاة الذكاء البشري، مثل التعلم واتخاذ القرارات وحل المشكلات.")}>
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start text-wrap h-auto py-2 whitespace-normal text-right"
+                    onClick={() =>
+                      setText(
+                        "الذكاء الاصطناعي هو قدرة الآلات على محاكاة الذكاء البشري، مثل التعلم واتخاذ القرارات وحل المشكلات."
+                      )
+                    }
+                  >
                     تعريف الذكاء الاصطناعي
                   </Button>
-                  <Button variant="outline" className="w-full justify-start" onClick={() => setText("أهلاً وسهلاً بكم في هذا البودكاست. اليوم سنتحدث عن أهمية التعليم في عصر الذكاء الاصطناعي.")}>
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start text-wrap h-auto py-2 whitespace-normal text-right"
+                    onClick={() =>
+                      setText(
+                        "أهلاً وسهلاً بكم في هذا البودكاست. اليوم سنتحدث عن أهمية التعليم في عصر الذكاء الاصطناعي."
+                      )
+                    }
+                  >
                     مقدمة بودكاست
                   </Button>
                 </div>

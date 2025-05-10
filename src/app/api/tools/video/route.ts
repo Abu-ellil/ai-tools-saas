@@ -1,20 +1,20 @@
-import { auth, currentUser } from '@clerk/nextjs';
-import { NextResponse } from 'next/server';
-import { db } from '@/lib/db';
+import { auth, currentUser } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
+import { db } from "@/lib/db";
 
 export async function POST(req: Request) {
   try {
-    const { userId } = auth();
+    const { userId } = await auth();
     const user = await currentUser();
 
     if (!userId || !user) {
-      return new NextResponse('Unauthorized', { status: 401 });
+      return new NextResponse("Unauthorized", { status: 401 });
     }
 
     const { prompt } = await req.json();
 
     if (!prompt) {
-      return new NextResponse('Prompt is required', { status: 400 });
+      return new NextResponse("Prompt is required", { status: 400 });
     }
 
     // Get user from database
@@ -28,14 +28,14 @@ export async function POST(req: Request) {
     });
 
     if (!dbUser) {
-      return new NextResponse('User not found', { status: 404 });
+      return new NextResponse("User not found", { status: 404 });
     }
 
     // Check if user has active subscription with credits
     const subscription = dbUser.subscriptions[0];
 
     if (!subscription || subscription.credits < 5) {
-      return new NextResponse('Insufficient credits', { status: 403 });
+      return new NextResponse("Insufficient credits", { status: 403 });
     }
 
     // In a real app, you would call the AI service API here
@@ -47,13 +47,13 @@ export async function POST(req: Request) {
     // const videoUrl = response.url;
 
     // For demo purposes, we'll return a placeholder
-    const videoUrl = 'https://example.com/video.mp4';
+    const videoUrl = "https://example.com/video.mp4";
 
     // Record usage
     await db.usageRecord.create({
       data: {
         userId: dbUser.id,
-        toolType: 'VIDEO',
+        toolType: "VIDEO",
         content: prompt,
         credits: 5, // Each video costs 5 credits
       },
@@ -73,7 +73,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ videoUrl });
   } catch (error) {
-    console.error('[VIDEO_ERROR]', error);
-    return new NextResponse('Internal error', { status: 500 });
+    console.error("[VIDEO_ERROR]", error);
+    return new NextResponse("Internal error", { status: 500 });
   }
 }
