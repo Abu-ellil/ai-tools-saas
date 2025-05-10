@@ -12,7 +12,7 @@ import {
 import { Menu } from "lucide-react";
 import { useState } from "react";
 import { useAppSelector } from "@/redux/hooks";
-import { UserButton } from "@clerk/nextjs";
+import { UserButtonWrapper } from "@/components/user-button-wrapper";
 
 export function Navbar() {
   // استخدام Redux للتحقق من حالة تسجيل الدخول
@@ -56,7 +56,7 @@ export function Navbar() {
           )}
           <div className="flex items-center gap-4">
             <ModeToggle />
-            {isSignedIn && <UserButton />}
+            {isSignedIn && <UserButtonWrapper />}
             {!isSignedIn && (
               <Button asChild>
                 <Link href="/sign-up">إنشاء حساب</Link>
@@ -68,7 +68,7 @@ export function Navbar() {
         {/* Mobile Navigation */}
         <div className="md:hidden flex items-center gap-4">
           <ModeToggle />
-          {isSignedIn && <UserButton />}
+          {isSignedIn && <UserButtonWrapper />}
           <DropdownMenu open={isMenuOpen} onOpenChange={setIsMenuOpen}>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="icon">

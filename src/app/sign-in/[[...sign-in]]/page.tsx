@@ -8,20 +8,18 @@ export default function SignInPage() {
   const isDevelopment = process.env.NODE_ENV === "development";
   const missingClerkKey = !process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
-  // في بيئة التطوير بدون مفتاح Clerk، نعرض رسالة للمستخدم
-  if (isDevelopment && missingClerkKey) {
+  // في بيئة التطوير، نعرض رسالة للمستخدم
+  if (isDevelopment) {
     return (
       <div className="flex items-center justify-center min-h-[calc(100vh-200px)]">
         <div className="max-w-md w-full p-4 text-center">
-          <h1 className="text-2xl font-bold mb-6">
-            تنبيه: مفتاح Clerk API مفقود
-          </h1>
-          <p className="mb-4">
-            يجب عليك إضافة مفتاح Clerk API في ملف .env لتشغيل صفحة تسجيل الدخول.
-          </p>
-          <p className="text-sm text-muted-foreground">
-            راجع ملف API_KEYS_SETUP.md للحصول على التعليمات.
-          </p>
+          <h1 className="text-2xl font-bold mb-6">وضع التطوير</h1>
+          <p className="mb-4">أنت في وضع التطوير. تم تسجيل دخولك تلقائيًا.</p>
+          <div className="mt-6">
+            <Button asChild>
+              <Link href="/dashboard">الذهاب إلى لوحة التحكم</Link>
+            </Button>
+          </div>
         </div>
       </div>
     );

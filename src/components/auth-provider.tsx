@@ -12,13 +12,6 @@ import {
 
 // مكون DevAuthSync لبيئة التطوير
 function DevAuthSync({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
-
-  // توجيه المستخدم إلى صفحة تسجيل الدخول
-  useEffect(() => {
-    router.push("/sign-in");
-  }, [router]);
-
   return <>{children}</>;
 }
 
