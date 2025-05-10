@@ -2,6 +2,8 @@
 
 import { SignIn } from "@clerk/nextjs";
 import { ClerkProvider } from "@clerk/nextjs";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function SignInPage() {
   // التحقق مما إذا كنا في بيئة التطوير بدون مفتاح Clerk
