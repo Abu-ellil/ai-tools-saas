@@ -8,6 +8,17 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 });
 
 export async function POST(req: Request) {
+  let priceId: string;
+  try {
+    const body = await req.json();
+    priceId = body.priceId;
+    if (!priceId) {
+      return new NextResponse("Price ID is required", { status: 400 });
+    }
+  } catch (error) {
+    return new NextResponse("Invalid request body", { status: 400 });
+  }
+  
   try {
     const { userId } = await auth();
     const user = await currentUser();
@@ -56,17 +67,7 @@ export async function POST(req: Request) {
       customer_email: user.emailAddresses[0].emailAddress,
       line_items: [
         {
-          price_data: {
-            currency: "USD",
-            product_data: {
-              name: "أدوات الذكاء - الباقة الشهرية",
-              description: "100 رسالة ChatGPT + 50 صورة + 10 فيديو + 20 صوت",
-            },
-            unit_amount: 500, // $5.00
-            recurring: {
-              interval: "month",
-            },
-          },
+          price: priceId,
           quantity: 1,
         },
       ],
