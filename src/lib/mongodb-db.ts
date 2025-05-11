@@ -14,8 +14,8 @@ type Models = {
 type ModelsWithConnect = Models & {
   connect: () => Promise<void>;
   isConnected: () => boolean;
-  createMockUser: (clerkId: string) => Promise<any>;
-  createMockSubscription: (userId: string) => Promise<any>;
+  createMockUser: (clerkId: string) => Promise<{ _id: string; clerkId: string; name: string; email: string; createdAt: Date }>;
+  createMockSubscription: (userId: string) => Promise<{ _id: string; userId: string; plan: string; status: string; credits: number; createdAt: Date; updatedAt: Date }>;
 };
 
 // متغير لتتبع حالة الاتصال

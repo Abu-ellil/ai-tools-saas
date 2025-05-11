@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { ClerkProvider, useAuth, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/redux/hooks";
