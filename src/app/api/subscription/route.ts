@@ -15,7 +15,7 @@ export async function POST(req: Request) {
     if (!priceId) {
       return new NextResponse("Price ID is required", { status: 400 });
     }
-  } catch (error) {
+  } catch (_error) {
     return new NextResponse("Invalid request body", { status: 400 });
   }
   
@@ -79,8 +79,8 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ url: stripeSession.url });
-  } catch (error) {
-    console.error("[SUBSCRIPTION_ERROR]", error);
+  } catch (_error) {
+    console.error("[SUBSCRIPTION_ERROR]", _error);
     return new NextResponse("Internal error", { status: 500 });
   }
 }
