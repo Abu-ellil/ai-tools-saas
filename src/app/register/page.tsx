@@ -13,7 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useAppDispatch } from "@/redux/hooks";
 import { signIn } from "@/redux/features/userSlice";
 import { setSubscription } from "@/redux/features/subscriptionSlice";
 import { useUser } from "@clerk/nextjs";

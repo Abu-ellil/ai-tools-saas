@@ -51,7 +51,7 @@ export async function POST(req: Request) {
     });
 
     // إنشاء اشتراك مجاني للمستخدم
-    const subscription = await db.subscription.insertOne({
+    await db.subscription.insertOne({
       userId: newUser.insertedId,
       plan: "FREE",
       status: "ACTIVE",

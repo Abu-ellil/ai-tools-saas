@@ -69,7 +69,7 @@ export async function PATCH(
       return new NextResponse("لا توجد بيانات للتحديث", { status: 400 });
     }
 
-    const updateData: any = {};
+    const updateData: { name?: string; email?: string; updatedAt: Date } = { updatedAt: new Date() };
     if (name) updateData.name = name;
     if (email) updateData.email = email;
     updateData.updatedAt = new Date();

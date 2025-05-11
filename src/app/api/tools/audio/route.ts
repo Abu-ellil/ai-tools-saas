@@ -11,7 +11,7 @@ export async function POST(req: Request) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const { text, voice, speed } = await req.json();
+    const { text } = await req.json();
 
     if (!text) {
       return new NextResponse("Text is required", { status: 400 });

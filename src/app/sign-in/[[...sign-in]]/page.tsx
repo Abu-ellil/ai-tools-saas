@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 export default function SignInPage() {
   // التحقق مما إذا كنا في بيئة التطوير بدون مفتاح Clerk
   const isDevelopment = process.env.NODE_ENV === "development";
-  const missingClerkKey = !process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
   // في بيئة التطوير، نعرض رسالة للمستخدم
   if (isDevelopment) {

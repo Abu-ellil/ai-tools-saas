@@ -14,7 +14,6 @@ import { Input } from "@/components/ui/input";
 import {
   Check,
   ChevronDown,
-  MessageSquare,
   Send,
   Sparkles,
 } from "lucide-react";
@@ -26,7 +25,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 
-import { AIModel, hasValidApiKey } from "@/lib/ai-service";
+import { AIModel } from "@/lib/ai-service";
 import { ApiKeyAlert } from "@/components/api-key-alert";
 
 // تعريف أنواع النماذج المتاحة
@@ -95,11 +94,8 @@ export default function ChatPage() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  // التحقق من وجود مفتاح API صالح
-  const [hasValidOpenAIKey] = useState(() => {
-    // في بيئة المتصفح، نفترض أن المفتاح صالح حتى نتلقى خطأ من الخادم
-    return true;
-  });
+  // في بيئة المتصفح، نفترض أن المفتاح صالح حتى نتلقى خطأ من الخادم
+  const [hasValidOpenAIKey] = useState(true);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

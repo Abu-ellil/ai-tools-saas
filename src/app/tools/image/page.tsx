@@ -120,7 +120,7 @@ export default function ImagePage() {
                           <div className="flex flex-col items-center text-muted-foreground">
                             <ImageIcon className="h-10 w-10 mb-2" />
                             <p>
-                              اكتب وصفاً وانقر على "توليد الصورة" لإنشاء صورة
+                              اكتب وصفاً وانقر على &quot;توليد الصورة&quot; لإنشاء صورة
                               جديدة
                             </p>
                           </div>

@@ -6,11 +6,9 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Download, Loader2, Music, Play, Square } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
@@ -165,7 +163,7 @@ export default function AudioPage() {
                           <div className="flex flex-col items-center text-muted-foreground">
                             <Music className="h-10 w-10 mb-2" />
                             <p>
-                              اكتب نصاً وانقر على "توليد الصوت" لإنشاء ملف صوتي
+                              اكتب نصاً وانقر على &quot;توليد الصوت&quot; لإنشاء ملف صوتي
                             </p>
                           </div>
                         )}

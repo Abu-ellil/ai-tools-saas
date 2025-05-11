@@ -17,10 +17,7 @@ import { UserButtonWrapper } from "@/components/user-button-wrapper";
 export function Navbar() {
   // استخدام Redux للتحقق من حالة تسجيل الدخول
   const isSignedIn = useAppSelector((state) => state.user.isSignedIn);
-  const user = useAppSelector((state) => state.user.user);
-  const subscription = useAppSelector(
-    (state) => state.subscription.subscription
-  );
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (

@@ -62,7 +62,7 @@ export async function PATCH(
       return new NextResponse("لا توجد بيانات للتحديث", { status: 400 });
     }
 
-    const updateData: any = {};
+    const updateData: Record<string, unknown> = {};
     if (plan) updateData.plan = plan;
     if (status) updateData.status = status;
     if (credits !== undefined) updateData.credits = credits;

@@ -116,7 +116,7 @@ export default function VideoPage() {
                           <div className="flex flex-col items-center text-muted-foreground">
                             <Video className="h-10 w-10 mb-2" />
                             <p>
-                              اكتب وصفاً وانقر على "توليد الفيديو" لإنشاء فيديو
+                              اكتب وصفاً وانقر على &quot;توليد الفيديو&quot; لإنشاء فيديو
                               جديد
                             </p>
                           </div>

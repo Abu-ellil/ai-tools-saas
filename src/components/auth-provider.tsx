@@ -52,7 +52,7 @@ function AuthSync({ children }: { children: React.ReactNode }) {
 
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const [needsRegistration, setNeedsRegistration] = useState(false);
+  // Check if the user is loaded and signed in
 
   useEffect(() => {
     if (!isLoaded) return;
