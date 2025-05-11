@@ -94,8 +94,6 @@ export default function ChatPage() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  // في بيئة المتصفح، نفترض أن المفتاح صالح حتى نتلقى خطأ من الخادم
-  const [hasValidOpenAIKey] = useState(true);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
