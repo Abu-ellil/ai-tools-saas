@@ -118,7 +118,7 @@ export default function Home() {
               </CardContent>
               <CardFooter>
                 <Button className="w-full" asChild>
-                  <Link href="/login">اشترك الآن</Link>
+                  <Link href="/sign-up">اشترك الآن</Link>
                 </Button>
               </CardFooter>
             </Card>

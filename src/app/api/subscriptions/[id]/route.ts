@@ -3,10 +3,16 @@ import { auth } from "@clerk/nextjs/server";
 import { db } from "@/lib/mongodb-db";
 import { ObjectId } from "mongodb";
 
+interface RouteContext {
+  params: {
+    id: string;
+  };
+}
+
 // الحصول على اشتراك بواسطة المعرف
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  context: RouteContext
 ) {
   try {
     const { userId } = await auth();
@@ -15,7 +21,7 @@ export async function GET(
       return new NextResponse("غير مصرح", { status: 401 });
     }
 
-    const id = params.id;
+    const id = context.params.id;
 
     // التحقق من صحة معرف MongoDB
     if (!ObjectId.isValid(id)) {
@@ -40,7 +46,7 @@ export async function GET(
 // تحديث اشتراك
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  context: RouteContext
 ) {
   try {
     const { userId } = await auth();
@@ -49,7 +55,7 @@ export async function PATCH(
       return new NextResponse("غير مصرح", { status: 401 });
     }
 
-    const id = params.id;
+    const id = context.params.id;
 
     // التحقق من صحة معرف MongoDB
     if (!ObjectId.isValid(id)) {
@@ -91,7 +97,7 @@ export async function PATCH(
 // حذف اشتراك
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  context: RouteContext
 ) {
   try {
     const { userId } = await auth();
@@ -100,7 +106,7 @@ export async function DELETE(
       return new NextResponse("غير مصرح", { status: 401 });
     }
 
-    const id = params.id;
+    const id = context.params.id;
 
     // التحقق من صحة معرف MongoDB
     if (!ObjectId.isValid(id)) {

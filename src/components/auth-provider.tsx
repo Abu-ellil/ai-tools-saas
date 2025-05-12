@@ -10,22 +10,8 @@ import {
   clearSubscription,
 } from "@/redux/features/subscriptionSlice";
 
-// مكون DevAuthSync لبيئة التطوير
-function DevAuthSync({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
-}
-
-// مكون AuthProvider الذي يتعامل مع المصادقة
+// AuthProvider component that always uses ClerkProvider
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  // التحقق مما إذا كنا في بيئة التطوير
-  const isDevelopment = process.env.NODE_ENV === "development";
-
-  // في بيئة التطوير، نتخطى ClerkProvider تمامًا
-  if (isDevelopment) {
-    return <DevAuthSync>{children}</DevAuthSync>;
-  }
-
-  // في بيئة الإنتاج، نستخدم ClerkProvider
   return (
     <ClerkProvider
       publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
@@ -44,28 +30,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-// مكون AuthSync لمزامنة حالة المصادقة مع Redux
+// AuthSync component to sync Clerk auth state with Redux
 function AuthSync({ children }: { children: React.ReactNode }) {
-  // استخدام useAuth و useUser من Clerk
   const { isLoaded, userId, isSignedIn } = useAuth();
   const { user } = useUser();
-
   const router = useRouter();
   const dispatch = useAppDispatch();
-  // Check if the user is loaded and signed in
 
   useEffect(() => {
     if (!isLoaded) return;
 
     if (isSignedIn && userId) {
-      // التحقق من حالة المستخدم في قاعدة البيانات
       fetch("/api/auth/status")
         .then((res) => res.json())
         .then((data) => {
           if (data.isSignedIn) {
-            // إذا كان المستخدم مسجل الدخول
             if (data.user) {
-              // تسجيل الدخول في Redux
               dispatch(
                 signIn({
                   id: data.user.id || data.user._id,
@@ -75,16 +55,11 @@ function AuthSync({ children }: { children: React.ReactNode }) {
                   credits: data.user.credits || 0,
                 })
               );
-
-              // إذا كان هناك اشتراك، قم بتعيينه في Redux
               if (data.subscription) {
                 dispatch(setSubscription(data.subscription));
               }
-
-              // إذا كان المستخدم يحتاج إلى إكمال التسجيل
               if (data.needsRegistration) {
-                setNeedsRegistration(true);
-                router.push("/register");
+                router.push("/complete-profile");
               }
             }
           }
@@ -93,7 +68,6 @@ function AuthSync({ children }: { children: React.ReactNode }) {
           console.error("Error checking auth status:", error);
         });
     } else if (!isSignedIn) {
-      // تسجيل الخروج من Redux إذا لم يكن المستخدم مسجل الدخول في Clerk
       dispatch(signOut());
       dispatch(clearSubscription());
     }

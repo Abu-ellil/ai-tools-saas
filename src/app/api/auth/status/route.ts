@@ -57,10 +57,8 @@ export async function GET() {
     } catch (dbError) {
       console.error("Error with database operations:", dbError);
 
-      // حتى في بيئة التطوير، نعيد خطأ إذا كان هناك مشكلة في قاعدة البيانات
-      // لا نستخدم بيانات وهمية
-
-      throw dbError;
+      // في حالة وجود خطأ في قاعدة البيانات، نعيد رسالة خطأ
+      return new NextResponse("خطأ في الاتصال بقاعدة البيانات", { status: 500 });
     }
   } catch (error) {
     console.error("Error in auth status API:", error);

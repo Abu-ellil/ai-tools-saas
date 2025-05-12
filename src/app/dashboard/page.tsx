@@ -1,6 +1,5 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
 import {
   Card,
   CardContent,
@@ -19,14 +18,29 @@ import {
   Video,
   Music,
 } from "lucide-react";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAppSelector } from "@/redux/hooks";
 
 export default function DashboardPage() {
-  const { user } = useUser();
+  const { user, isSignedIn } = useAppSelector((state) => state.user);
+  const { subscription } = useAppSelector((state) => state.subscription);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isSignedIn) {
+      router.push("/login");
+    }
+  }, [isSignedIn, router]);
+
+  if (!isSignedIn) {
+    return null;
+  }
 
   return (
     <div className="container py-10">
       <h1 className="text-3xl font-bold mb-6">
-        مرحباً، {user?.firstName || "مستخدم"}
+        مرحباً، {user?.name || "مستخدم"}
       </h1>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -37,7 +51,7 @@ export default function DashboardPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">85</div>
+            <div className="text-2xl font-bold">{user?.credits || 0}</div>
             <p className="text-xs text-muted-foreground mt-1">
               من أصل 100 نقطة
             </p>
@@ -55,9 +69,9 @@ export default function DashboardPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">الباقة الشهرية</div>
+            <div className="text-2xl font-bold">{subscription?.plan || "FREE"}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              تجديد تلقائي في 15 يونيو 2024
+              حالة الاشتراك: {subscription?.status || "ACTIVE"}
             </p>
             <div className="mt-4">
               <Button size="sm" variant="outline" className="w-full">

@@ -46,19 +46,19 @@ export function Navbar() {
             </>
           ) : (
             <>
-              <Link href="/login" className="hover:text-primary transition">
+              <Link href="/sign-in" className="hover:text-primary transition">
                 تسجيل الدخول
               </Link>
             </>
           )}
           <div className="flex items-center gap-4">
             <ModeToggle />
-            {isSignedIn && <UserButtonWrapper />}
-            {!isSignedIn && (
+            {isSignedIn ? <UserButtonWrapper /> : null}
+            {!isSignedIn ? (
               <Button asChild>
                 <Link href="/sign-up">إنشاء حساب</Link>
               </Button>
-            )}
+            ) : null}
           </div>
         </div>
 
@@ -99,14 +99,12 @@ export function Navbar() {
               ) : (
                 <>
                   <DropdownMenuItem asChild>
-                    <Link href="/login" className="w-full cursor-pointer">
+                    <Link href="/sign-in" className="w-full cursor-pointer">
                       تسجيل الدخول
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/sign-up" className="w-full cursor-pointer">
-                      إنشاء حساب
-                    </Link>
+<Link href="/sign-up">إنشاء حساب</Link>
                   </DropdownMenuItem>
                 </>
               )}

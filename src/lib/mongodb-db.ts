@@ -23,11 +23,7 @@ let isConnected = false;
 
 // وظيفة للاتصال بقاعدة البيانات
 const connect = async (): Promise<void> => {
-  // في بيئة التطوير، نسمح بالاستمرار حتى بدون اتصال
-  const isDevelopment = process.env.NODE_ENV === "development";
-
   if (isConnected) return;
-
   try {
     await connectToDatabase();
     isConnected = true;
@@ -35,39 +31,8 @@ const connect = async (): Promise<void> => {
   } catch (err) {
     console.error("Failed to connect to MongoDB:", err);
     isConnected = false;
-
-    // في بيئة التطوير، نسمح بالاستمرار حتى مع وجود خطأ
-    if (!isDevelopment) {
-      throw err;
-    }
+    throw err;
   }
-};
-
-// وظيفة لإنشاء مستخدم وهمي في بيئة التطوير
-const createMockUser = async (clerkId: string) => {
-  console.log("Creating mock user for development");
-  return {
-    _id: "mock_user_id",
-    clerkId,
-    name: "مستخدم تجريبي",
-    email: "user@example.com",
-    credits: 100,
-    createdAt: new Date(),
-  };
-};
-
-// وظيفة لإنشاء اشتراك وهمي في بيئة التطوير
-const createMockSubscription = async (userId: string) => {
-  console.log("Creating mock subscription for development");
-  return {
-    _id: "mock_subscription_id",
-    userId,
-    plan: "FREE",
-    status: "ACTIVE",
-    credits: 100,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  };
 };
 
 // محاولة الاتصال عند بدء التطبيق
@@ -79,7 +44,5 @@ export const db: ModelsWithConnect = {
   subscription: Subscription,
   usageRecord: UsageRecord,
   connect,
-  isConnected: () => isConnected,
-  createMockUser,
-  createMockSubscription,
+  isConnected: () => isConnected
 };

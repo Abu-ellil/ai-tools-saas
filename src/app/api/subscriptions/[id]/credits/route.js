@@ -5,11 +5,11 @@ import { ObjectId } from "mongodb";
 
 // تحديث رصيد الاشتراك
 export async function PATCH(
-  req: Request,
-  { params }: { params: { id: string } }
+  req,
+  { params }
 ) {
   try {
-    const { userId } = await auth();
+    const { userId } = await auth(); 
 
     if (!userId) {
       return new NextResponse("غير مصرح", { status: 401 });

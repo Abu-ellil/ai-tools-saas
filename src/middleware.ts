@@ -13,10 +13,9 @@ const protectedRoutes = [
 // Define public routes
 const publicRoutes = [
   "/",
-  "/login",
   "/sign-in",
   "/sign-up",
-  "/register",
+  "/complete-profile",
   "/pricing",
   "/api/webhook",
 ];
@@ -52,7 +51,7 @@ export function middleware(request: NextRequest) {
     const isAuthenticated = true; // In production, this would be a real check
 
     if (!isAuthenticated) {
-      const signInUrl = new URL("/login", request.url);
+      const signInUrl = new URL("/sign-in", request.url);
       signInUrl.searchParams.set("redirect_url", request.url);
       return NextResponse.redirect(signInUrl);
     }

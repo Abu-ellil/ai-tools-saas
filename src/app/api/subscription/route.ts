@@ -4,7 +4,7 @@ import Stripe from "stripe";
 import { db } from "@/lib/db";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-04-30.basil",
+  apiVersion: "2024-04-08",
 });
 
 export async function POST(req: Request) {
@@ -15,7 +15,8 @@ export async function POST(req: Request) {
     if (!priceId) {
       return new NextResponse("Price ID is required", { status: 400 });
     }
-  } catch (_error) {
+  } catch (e) {
+    console.error("[SUBSCRIPTION_ERROR]", e);
     return new NextResponse("Invalid request body", { status: 400 });
   }
   
@@ -79,8 +80,8 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ url: stripeSession.url });
-  } catch (_error) {
-    console.error("[SUBSCRIPTION_ERROR]", _error);
+  } catch (e) {
+    console.error("[SUBSCRIPTION_ERROR]", e);
     return new NextResponse("Internal error", { status: 500 });
   }
 }

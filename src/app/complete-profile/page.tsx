@@ -17,17 +17,15 @@ import { useAppDispatch } from "@/redux/hooks";
 import { signIn } from "@/redux/features/userSlice";
 import { setSubscription } from "@/redux/features/subscriptionSlice";
 import { useUser } from "@clerk/nextjs";
+import { useToast } from "@/components/ui/use-toast";
 
-export default function RegisterPage() {
+export default function CompleteProfilePage() {
   const router = useRouter();
   const dispatch = useAppDispatch();
-
-  // التحقق مما إذا كنا في بيئة التطوير بدون مفتاح Clerk
-  const isDevelopment = process.env.NODE_ENV === "development";
-  const missingClerkKey = !process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+  const { toast } = useToast();
 
   // استخدام useUser من Clerk
-  const { user } = useUser();
+  const { user, isSignedIn, isLoaded } = useUser();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -42,20 +40,26 @@ export default function RegisterPage() {
     }
   }, [user]);
 
-  const handleRegister = async (e: React.FormEvent) => {
+  // التحقق من تسجيل الدخول
+  useEffect(() => {
+    if (isLoaded && !isSignedIn) {
+      router.push("/sign-in");
+    }
+  }, [isLoaded, isSignedIn, router]);
+
+  const handleCompleteProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
 
-    // في بيئة التطوير بدون مفتاح Clerk، نعرض رسالة خطأ
-    if (isDevelopment && missingClerkKey) {
-      setError("يجب إضافة مفتاح Clerk API في ملف .env لتشغيل صفحة التسجيل");
+    if (!name || !email) {
+      setError("الاسم والبريد الإلكتروني مطلوبان");
       setIsLoading(false);
       return;
     }
 
     try {
-      // إرسال طلب التسجيل إلى الخادم
+      // إرسال طلب إكمال التسجيل إلى الخادم
       const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
@@ -66,7 +70,7 @@ export default function RegisterPage() {
 
       if (!response.ok) {
         const errorData = await response.text();
-        throw new Error(errorData || "فشل في تسجيل المستخدم");
+        throw new Error(errorData || "فشل في إكمال التسجيل");
       }
 
       const data = await response.json();
@@ -74,61 +78,38 @@ export default function RegisterPage() {
       // تسجيل الدخول في Redux
       dispatch(
         signIn({
-          id: data.user._id,
+          id: data.user.id,
           clerkId: data.user.clerkId,
           name: data.user.name,
           email: data.user.email,
-          credits: 0,
+          credits: data.user.credits || 0,
         })
       );
 
       // تعيين الاشتراك في Redux
-      dispatch(
-        setSubscription({
-          id: data.subscription._id,
-          userId: data.subscription.userId,
-          plan: data.subscription.plan,
-          status: data.subscription.status,
-          credits: data.subscription.credits,
-          createdAt: data.subscription.createdAt,
-          updatedAt: data.subscription.updatedAt,
-        })
-      );
+      if (data.subscription) {
+        dispatch(setSubscription(data.subscription));
+      }
+
+      toast({
+        title: "تم إكمال التسجيل بنجاح",
+        description: "تم إنشاء حسابك بنجاح",
+      });
 
       // توجيه المستخدم إلى الصفحة الرئيسية
-      router.push("/");
+      router.push("/dashboard");
     } catch (error) {
-      console.error("Error registering user:", error);
+      console.error("Error completing profile:", error);
       setError(error instanceof Error ? error.message : "حدث خطأ غير معروف");
     } finally {
       setIsLoading(false);
     }
   };
 
-  // في بيئة التطوير بدون مفتاح Clerk، نعرض رسالة للمستخدم
-  if (isDevelopment && missingClerkKey) {
-    return (
-      <div className="container py-10">
-        <div className="max-w-md mx-auto">
-          <Card>
-            <CardHeader>
-              <CardTitle>تنبيه: مفتاح Clerk API مفقود</CardTitle>
-              <CardDescription>
-                يجب عليك إضافة مفتاح Clerk API في ملف .env لتشغيل صفحة التسجيل.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-sm text-muted-foreground">
-                راجع ملف API_KEYS_SETUP.md للحصول على التعليمات.
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    );
+  if (!isLoaded || !isSignedIn) {
+    return null;
   }
 
-  // في بيئة الإنتاج، نعرض نموذج التسجيل العادي
   return (
     <div className="container py-10">
       <div className="max-w-md mx-auto">
@@ -139,7 +120,7 @@ export default function RegisterPage() {
               أكمل معلوماتك للوصول إلى جميع الأدوات
             </CardDescription>
           </CardHeader>
-          <form onSubmit={handleRegister}>
+          <form onSubmit={handleCompleteProfile}>
             <CardContent className="space-y-4">
               {error && (
                 <div className="bg-red-50 p-3 rounded-md text-red-600 text-sm">
@@ -171,7 +152,7 @@ export default function RegisterPage() {
             </CardContent>
             <CardFooter className="flex flex-col space-y-4">
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "جاري التسجيل..." : "إكمال التسجيل"}
+                {isLoading ? "جاري الإرسال..." : "إكمال التسجيل"}
               </Button>
             </CardFooter>
           </form>
