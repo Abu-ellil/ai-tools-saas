@@ -53,7 +53,7 @@ export default function PricingPage() {
           </CardContent>
           <CardFooter>
             <Button variant="outline" className="w-full" asChild>
-              <Link href="/register">ابدأ مجاناً</Link>
+              <Link href="/sign-up">ابدأ مجاناً</Link>
             </Button>
           </CardFooter>
         </Card>
@@ -95,7 +95,7 @@ export default function PricingPage() {
           </CardContent>
           <CardFooter>
             <Button className="w-full" asChild>
-              <Link href="/register">اشترك الآن</Link>
+              <Link href="/sign-up">اشترك الآن</Link>
             </Button>
           </CardFooter>
         </Card>

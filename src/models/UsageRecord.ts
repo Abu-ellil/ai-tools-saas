@@ -1,26 +1,12 @@
-import mongoose, { Schema, Document } from 'mongoose';
-import { IUser } from './User';
+import mongoose, { Schema } from 'mongoose'; // Document might not be needed directly here if IUsageRecord handles it
+// import { IUser } from './User'; // Removed as IUser is not directly used here
+import { IUsageRecord, ToolType } from '@/types/usage-record-types'; // Adjusted import path
 
-export enum ToolType {
-  CHAT = 'CHAT',
-  IMAGE = 'IMAGE',
-  VIDEO = 'VIDEO',
-  AUDIO = 'AUDIO',
-}
-
-export interface IUsageRecord extends Document {
-  id: string;
-  userId: string;
-  user: IUser['_id'];
-  toolType: ToolType;
-  content?: string;
-  credits: number;
-  createdAt: Date;
-}
-
-const UsageRecordSchema: Schema = new Schema(
+const UsageRecordSchema: Schema = new Schema<IUsageRecord>(
   {
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    // Note: In IUsageRecord, userId is string. Mongoose schema uses ObjectId. This is a common pattern.
+    // user field is not explicitly defined in schema here as it's populated, ensure IUsageRecord matches this intent.
     toolType: { type: String, enum: Object.values(ToolType), required: true },
     content: { type: String },
     credits: { type: Number, required: true },

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/mongodb-db";
-import bcrypt from "bcryptjs";
+// import bcrypt from "bcryptjs"; // Removed as it's not used
 
 // تسجيل مستخدم جديد
 export async function POST(req: Request) {

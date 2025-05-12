@@ -1,22 +1,23 @@
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { currentUser } from "@clerk/nextjs/server"; // Removed unused 'auth'
 import { db } from "@/lib/mongodb-db";
 
 // الحصول على حالة تسجيل الدخول والمعلومات الأساسية للمستخدم
 export async function GET() {
   try {
-    // التحقق من تسجيل الدخول
-    const authResult = await auth();
-    const userId = authResult.userId;
+    // التحقق من تسجيل الدخول باستخدام currentUser
+    const user = await currentUser();
 
     // إذا لم يكن المستخدم مسجل الدخول
-    if (!userId) {
+    if (!user || !user.id) {
       return NextResponse.json({
         isSignedIn: false,
         user: null,
         subscription: null,
       });
     }
+
+    const userId = user.id;
 
     try {
       // التأكد من الاتصال بقاعدة البيانات

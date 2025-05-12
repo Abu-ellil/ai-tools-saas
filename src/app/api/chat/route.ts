@@ -44,7 +44,7 @@ export async function POST(req: Request) {
     if (!db.isConnected()) {
       await db.connect();
     }
-    let dbUser = await db.user.findOne({ clerkId: clerkUserId });
+    const dbUser = await db.user.findOne({ clerkId: clerkUserId });
     if (!dbUser) {
       return new NextResponse("المستخدم غير موجود", { status: 404 });
     }
@@ -54,7 +54,7 @@ export async function POST(req: Request) {
       content: messages[messages.length - 1].content,
       credits: 1,
     });
-    let subscription = await db.subscription.findOne({
+    const subscription = await db.subscription.findOne({
       userId: dbUser._id,
     });
     if (!subscription) {

@@ -123,7 +123,7 @@ export default function LoginPage() {
               </Button>
               <div className="text-center text-sm">
                 ليس لديك حساب؟{" "}
-                <Button variant="link" className="p-0" onClick={() => router.push("/register")}>
+                <Button variant="link" className="p-0" onClick={() => router.push("/sign-up")}>
                   إنشاء حساب جديد
                 </Button>
               </div>

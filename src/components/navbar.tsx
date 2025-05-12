@@ -104,7 +104,7 @@ export function Navbar() {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-<Link href="/sign-up">إنشاء حساب</Link>
+                    <Link href="/sign-up">إنشاء حساب</Link>
                   </DropdownMenuItem>
                 </>
               )}

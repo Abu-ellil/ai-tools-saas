@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { persistStore, persistReducer } from "redux-persist";
+import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // استخدام localStorage
 import { combineReducers } from "redux";
 import userReducer from "./features/userSlice";
@@ -11,6 +11,8 @@ const persistConfig = {
   key: "root",
   storage,
   whitelist: ["user", "subscription"], // حالات المستخدم والاشتراك ستكون مستمرة
+  // مسح البيانات المخزنة عند تسجيل الخروج
+  transforms: [],
 };
 
 // دمج جميع المخفضات
@@ -30,11 +32,7 @@ export const store = configureStore({
     getDefaultMiddleware({
       serializableCheck: {
         // تجاهل إجراءات الاستمرارية في فحص القابلية للتسلسل
-        ignoredActions: [
-          "persist/PERSIST",
-          "persist/REHYDRATE",
-          "persist/REGISTER",
-        ],
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }),
 });

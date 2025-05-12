@@ -1,20 +1,21 @@
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { currentUser } from "@clerk/nextjs/server";
 import { db } from "@/lib/mongodb-db";
 
 // تسجيل مستخدم جديد في قاعدة البيانات بعد التسجيل في Clerk
 export async function POST(req: Request) {
   try {
-    // التحقق من تسجيل الدخول
-    const authResult = await auth();
-    const userId = authResult.userId;
+    // التحقق من تسجيل الدخول باستخدام currentUser
+    const user = await currentUser();
 
     // إذا لم يكن المستخدم مسجل الدخول، نرفض الطلب
-    if (!userId) {
+    if (!user || !user.id) {
       return new NextResponse("غير مصرح، يجب تسجيل الدخول لاستخدام هذه الخدمة", {
         status: 401,
       });
     }
+
+    const userId = user.id;
 
     // استخراج بيانات المستخدم من الطلب
     const { name, email } = await req.json();
