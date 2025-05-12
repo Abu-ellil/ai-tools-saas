@@ -1,6 +1,8 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import { db as mongodb } from "@/lib/mongodb-db"; // Changed to MongoDB client
+import { ToolType } from "@/models/UsageRecord"; // Assuming ToolType enum is here or in a types file
+import { ObjectId } from "mongodb"; // If your MongoDB _ids are ObjectIds and need conversion from string
 
 export async function POST(req: Request) {
   try {
@@ -17,25 +19,27 @@ export async function POST(req: Request) {
       return new NextResponse("Text is required", { status: 400 });
     }
 
-    // Get user from database
-    const dbUser = await db.user.findUnique({
-      where: {
-        clerkId: userId,
-      },
-      include: {
-        subscriptions: true,
-      },
-    });
-
-    if (!dbUser) {
-      return new NextResponse("User not found", { status: 404 });
+    // Ensure MongoDB is connected (if your mongodb-db.ts doesn't auto-connect on import)
+    if (!mongodb.isConnected()) {
+      await mongodb.connect();
     }
 
-    // Check if user has active subscription with credits
-    const subscription = dbUser.subscriptions[0];
+    // Get user from MongoDB
+    const mongoUser = await mongodb.user.findOne({ clerkId: userId });
 
-    if (!subscription || subscription.credits < 2) {
-      return new NextResponse("Insufficient credits", { status: 403 });
+    if (!mongoUser) {
+      return new NextResponse("User not found in MongoDB", { status: 404 });
+    }
+
+    // Fetch subscription from MongoDB
+    // Ensure mongoUser._id is the correct type (string or ObjectId) for the query
+    const mongoSubscription = await mongodb.subscription.findOne({ userId: mongoUser._id });
+
+    if (!mongoSubscription || mongoSubscription.credits < 2) {
+      return new NextResponse(
+        `Insufficient credits. Found: ${mongoSubscription?.credits || 'N/A'}`,
+        { status: 403 }
+      );
     }
 
     // In a real app, you would call the AI service API here
@@ -55,27 +59,21 @@ export async function POST(req: Request) {
     // For demo purposes, we'll return a placeholder
     const audioUrl = "https://example.com/audio.mp3";
 
-    // Record usage
-    await db.usageRecord.create({
-      data: {
-        userId: dbUser.id,
-        toolType: "AUDIO",
-        content: text.substring(0, 100), // Store first 100 chars of text
-        credits: 2, // Each audio costs 2 credits
-      },
+    // Record usage in MongoDB
+    const newUsageRecord = new mongodb.usageRecord({
+      userId: mongoUser._id, // Use MongoDB user ID
+      toolType: ToolType.AUDIO, // Use Enum if available
+      content: text.substring(0, 100),
+      credits: 2,
+      // createdAt will be handled by Mongoose timestamps if configured
     });
+    await newUsageRecord.save();
 
-    // Deduct credits
-    await db.subscription.update({
-      where: {
-        id: subscription.id,
-      },
-      data: {
-        credits: {
-          decrement: 2,
-        },
-      },
-    });
+    // Deduct credits in MongoDB
+    await mongodb.subscription.updateOne(
+      { _id: mongoSubscription._id },
+      { $inc: { credits: -2 } }
+    );
 
     return NextResponse.json({ audioUrl });
   } catch (error) {
